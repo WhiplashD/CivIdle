@@ -55,6 +55,10 @@ public class Building extends Buyable implements Serializable, Invokable {
         return name;
     }
 
+    /**
+     *
+     * @return a user friendly representation of amount.
+     */
     public String displayAmount() {
         return Shorthand.parse(amount) + " ";
     }

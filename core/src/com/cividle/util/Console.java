@@ -78,9 +78,9 @@ public class Console implements Serializable {
                     }
                     printlist.add(CivIdle.pdr.Timestamp() + message);
 //                    consoleout.setText("");
-                    for (Object s : printlist) {
-                        System.out.println(s);
-                    }
+//                    for (Object s : printlist) {
+                    System.out.println(printlist.size() - 1);
+//                    }
                     break;
                 case s:
                     if (islogging) {

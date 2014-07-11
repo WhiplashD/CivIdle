@@ -13,14 +13,14 @@ import com.cividle.util.Saver;
 
 public class CivIdle extends ApplicationAdapter {
 
-    public boolean isrunning = true, devmode = false;
-    public Game game;
-    private UI ui;
-    private DesktopUI dui;
-    long lastloop = TimeUtils.nanoTime();
-    int targetfps = 60;
-    long targettime = 1000000000 / targetfps;
-    double delta = 0;
+    private boolean isrunning = true, devmode = false;
+    public static Game game;
+    private static UI ui;
+//    private DesktopUI dui;
+    private long lastloop = TimeUtils.nanoTime();
+    private final int targetfps = 60;
+    private final long targettime = 1000000000 / targetfps;
+    private double delta = 0;
     public static PlatformDependencyResolver pdr = null;
 
     public static void setTPD(PlatformDependencyResolver tpd) {
@@ -31,23 +31,30 @@ public class CivIdle extends ApplicationAdapter {
     public void create() {
         game = new Game();
         ui = new UI(game);
+        Saver.Initialize();
+
+// Uncomment these lines to work with the old UI
+//        dui = new DesktopUI(game, devmode);
+//        dui.setVisible(true);
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         long Now = TimeUtils.nanoTime();
         double updateLength = Now - lastloop;
         delta += (updateLength / 1000000000);
         lastloop = Now;
+
+        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (delta >= 1) { // Updates that are done periodically, every second.
             game.Update();
             Saver.Update(game);
             delta = 0;
         }
-        // Switch these two lines for old UI..
+
+// Uncomment this line to work with old UI
 //        dui.UpdateDisplay();
         ui.render();
     }

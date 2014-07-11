@@ -12,11 +12,18 @@ public class InvasionEvent extends Event {
 
     private InvasionType t;
 
+    /**
+     * Creates a new invasion event.
+     */
     public InvasionEvent() {
         super(60000);
         Wolf = new InvasionType("Wolves", 1, 1, 10, 0.25f);
     }
 
+    /**
+     *
+     * @return the invasion events type name.
+     */
     public String getName() {
         return t.getName();
     }
@@ -24,7 +31,7 @@ public class InvasionEvent extends Event {
     @Override
     public void Create(Game game) {
         StartEvent();
-        Console.println("Invasion Event active!", Console.Type.s);
+        Console.println("Invasion Event active!" + this.toString());
         t = Wolf;
         game.pm.CatchEvent(this);
     }

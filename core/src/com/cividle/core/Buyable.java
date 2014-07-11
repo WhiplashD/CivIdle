@@ -97,6 +97,10 @@ public abstract class Buyable implements Serializable {
         return cost[index];
     }
 
+    /**
+     *
+     * @return a user friendly representation of the cost.
+     */
     public String displayCost() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cost.length; i++) {

@@ -23,7 +23,7 @@ public class TradeEvent extends Event {
     @Override
     public void Create(Game game) {
         StartEvent();
-        Console.println("Trade Event active!");
+        Console.println("Trade Event active!" + this.toString());
         game.rm.CatchEvent(this);
 
     }

@@ -30,13 +30,13 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
     Food food = new Food("Food", "Barn", 1.4f);
     Wood wood = new Wood("Wood", "LumberYard", 1.2f);
     Stone stone = new Stone("Stone", "StoneStockpile", 1.2f);
-    // Special resources.
+    // Advanced resources.
     Skins skins = new Skins("Animal Skins", "Storage");
     Herbs herbs = new Herbs("Herbs", "Storage");
     Ore ore = new Ore("Ore", "Storage");
     Leather leather = new Leather("Leather", "Storage");
     Metal metal = new Metal("Metal", "Storage");
-    // These resources have no container.
+    // These special resources have no container.
     Land land = new Land("Land");
     Piety piety = new Piety("Piety", 1.15f);
     Research research = new Research("Research", 1.15f);
@@ -224,7 +224,7 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
      * @param b the container building.
      */
     public void UpdateResourceLimit(Building b) {
-        Console.println("Updating resource limit...", Console.Type.s);
+        Console.println("Updating resource limit.");
         switch (b.getName()) {
             case "Barn":
                 food.setMaxAmount((b.getAmount() * b.getCapacity()));

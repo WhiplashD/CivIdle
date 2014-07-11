@@ -95,10 +95,18 @@ public class Upgrade extends Buyable implements Serializable {
         return description;
     }
 
+    /**
+     *
+     * @return the upgrade value.
+     */
     public float getUValue() {
         return uvalue;
     }
 
+    /**
+     *
+     * @return whether or not the upgrade has been purchased.
+     */
     public boolean isOwned() {
         return purchased;
     }

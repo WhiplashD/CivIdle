@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cividle.core;
 
 /**
@@ -10,6 +5,12 @@ package com.cividle.core;
  * @author Whiplash
  */
 public interface PlatformDependencyResolver {
+    /* 
+     The platform dependcy resolver is used to store platform dependent code.
+     Methods declared here will be implemented by classes in the respective
+     platform projects with the platform dependent code. Any classes in the 
+     core project will call these methods.
+     */
 
     public void PrintPlatform();
 

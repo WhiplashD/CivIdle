@@ -24,7 +24,7 @@ import java.util.Random;
  * @author Whiplash
  */
 public class PopulationManager implements Updateable, Serializable, Invokable, EventCatcher<InvasionEvent> {
-    
+
     private long minpopamount = 0, popamount = 0, maxpopamount = 0, starvationpercentage = 1;
     private boolean starving;
     private double starvationmultiplier = 1.0f;
@@ -48,7 +48,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     Hunter hunter = new Hunter("Hunter", "Hunting Lodge");
     Cleric cleric = new Cleric("Cleric", "Church");
     Sick sick = new Sick("Sick");
-    
+
     public PopulationManager() {
         maxpopamount = 10; // Default population limit.
         occupationlist.add(unemployed); // Unemployed is the "default" worker group.
@@ -63,7 +63,6 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         occupationlist.add(soldier);
         rand = new Random();
         title = new TownshipTitle(TownshipTitle.Title.Hamlet);
-        farmer.addAmount(1);
     }
 
     /**
@@ -126,39 +125,42 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     public void subtractMaxAmount(long value) {
         maxpopamount -= Math.max(value, minpopamount);
     }
-    
+
     private void KillPopulation(long value) {
-        int i = 0;
-        int k = 7;
+        int i = 0; // Counts up and exits while loop when it reaches value.
+        int k = 7; // Variable used to determine which job to choose from.
         while (i < value && popamount > 0) {
-            int j = rand.nextInt(Math.min(Math.max(8 - k, 0), 8));
+            int j = rand.nextInt(Math.min(Math.max(8 - k, 0), 8)); // Chooses job to kill a citizen.
+            // Checks if the job has any citizens, and neither are the dead jobs.
             if (occupationlist.get(j).getAmount() > 0 && !occupationlist.get(j).equals(unburieddead) && !occupationlist.get(j).equals(dead)) {
                 occupationlist.get(j).subtractAmount(1);
                 unburieddead.addAmount(1);
                 UpdatePopulation();
                 i++;
-                k = 7;
+                k = 7; // Resets the job choosing variable if our check was successful.
             }
-            k--;
+            k--; // We decrement the job choosing variable if our previous check was unsuccessful. 
         }
     }
-    
+
     private void BuryDead() {
+        // We check if there are any unburied dead and there are clerics to bury the dead.
         if (unburieddead.getAmount() > 0 && cleric.getAmount() > 0) {
+            // Then we check if we have space for the dead.
             if (unburieddead.getAmount() - cleric.getAmount() >= 0 && dead.getAmount() + (unburieddead.getAmount() - cleric.getAmount()) < dead.getMaxAmount()) {
                 unburieddead.subtractAmount(cleric.getAmount());
                 dead.addAmount(cleric.getAmount());
             }
         }
     }
-    
+
     private void CheckSickness(ResourceManager rm) {
         if (rm.sickness.limitReached() | sick.getAmount() > 0) {
             SpreadSickness();
             CureSickness(rm);
         }
     }
-    
+
     private void CureSickness(ResourceManager rm) { // Apothecaries reduce sickness as long as there are herbs.
         if (rm.sickness.getAmount() - apothecary.getAmount() >= 0) { // Reduces sickness aura thingymajigger.
             rm.sickness.subtractAmount(apothecary.getAmount());
@@ -166,7 +168,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
             sick.subtractAmount(apothecary.getAmount());
         }
     }
-    
+
     private void SpreadSickness() {
         if (unburieddead.getAmount() > 0 && sick.getAmount() < popamount) {
             sick.addAmount(1);
@@ -195,8 +197,8 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
                 UpdatePopulation();
                 tmp++;
             }
-            
-        } else if (j.equals(forester) | j.equals(miner)) { // Tests for either limitless jobs.
+
+        } else if (j.equals(forester) | j.equals(miner)) { // Tests for either buildingless jobs.
             int tmp = 0;
             while (unemployed.getAmount() > 0 && tmp < value) {
                 unemployed.subtractAmount(1);
@@ -213,7 +215,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
                 j.addAmount(1);
                 UpdatePopulation();
                 tmp++;
-                
+
             }
         }
     }
@@ -257,7 +259,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
             starving = true;
         }
     }
-    
+
     private void UpdatePopulation() { // Keeps track of overrall population
         int newpopamount = 0;
         for (Occupation j : occupationlist) {
@@ -266,6 +268,8 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
             }
         }
         popamount = newpopamount;
+
+// Title setting and checking.        
         if (title.getTitle() != TownshipTitle.Title.Hamlet && popamount < 500) { // Hamlet
             title.setTitle(TownshipTitle.Title.Hamlet);
         } else if (title.getTitle() != TownshipTitle.Title.Village && popamount > 500) { // Village
@@ -286,7 +290,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         }
         // Max amount matching.
         unemployed.setMaxAmount(maxpopamount);
-        unburieddead.setMaxAmount(maxpopamount * 100);
+        unburieddead.setMaxAmount(maxpopamount * 100); // Arbitrary value, it just needs to be higher than the max pop amount.
         sick.setMaxAmount(maxpopamount);
     }
 
@@ -314,12 +318,12 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         // Formula is: Base 1 plus a base of 1% of the current population plus N% of the population where N increments each second.
         starvationmultiplier = 1 + (popamount * (0.01f + (starvationpercentage * 0.01f)));
     }
-    
+
     @Override
     public void CatchEvent(InvasionEvent ev) {
         Console.println("Caught event " + ev.getName());
     }
-    
+
     @Override
     public void Update(Game game) {
         PopulationHungerUpkeep(game.rm);
@@ -327,7 +331,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         CheckSickness(game.rm);
         BuryDead();
     }
-    
+
     @Override
     public void execute(String command) {
         String[] tmp = command.split(delimiter);

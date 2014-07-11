@@ -7,7 +7,7 @@ package com.cividle.core;
 public interface Updateable {
 
     /**
-     * Time dependent update method.
+     * Update method.
      *
      * @param game
      */

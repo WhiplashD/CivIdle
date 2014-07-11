@@ -1,7 +1,6 @@
 package com.cividle.core;
 
 import com.cividle.util.Console;
-import com.cividle.util.Console.Type;
 import java.util.Random;
 
 /**
@@ -36,7 +35,6 @@ public class RandomEventHandler implements Updateable {
 
     private void setNewThrowTime() {
         newthrowtime = currenttime + throwdelay;
-        //	newthrowtime = currenttime;
     }
 
     private boolean CheckThrowTime() {
@@ -48,7 +46,7 @@ public class RandomEventHandler implements Updateable {
     }
 
     private boolean CheckChance() {
-        return rand.nextInt(1000) >= 90;
+        return rand.nextInt(1000) >= 990;
     }
 
     private void UpdateTime() {
@@ -56,7 +54,7 @@ public class RandomEventHandler implements Updateable {
     }
 
     public void EndEvent() {
-        Console.println("Closing event.");
+        Console.println("Closing event." + ev.toString());
         hasevent = false;
         ev.Dispose();
         ev = null;

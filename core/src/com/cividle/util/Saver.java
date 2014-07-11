@@ -1,11 +1,6 @@
 package com.cividle.util;
 
 import com.cividle.core.Game;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
@@ -18,18 +13,17 @@ public class Saver {
 
     private static long currenttime, oldsavetime, newsavetime;
     private static final int defaultsaveinterval = 350; // In seconds.
-    private static final String savefilename = "Civclicker.json";
+    private static final String savefilename = "civsave.json";
     private static int saveinterval; // In seconds;
 
     public static void Initialize() {
         saveinterval = defaultsaveinterval;
-    //	saveinterval = 15;
         updateCurrentTime();
         setNewSaveTime();
     }
 
     /**
-     * Resets the save interval to default. Default 60 seconds.
+     * Resets the save interval to default. Default 350 seconds.
      *
      */
     public static void resetSaveInterval() {
@@ -44,17 +38,16 @@ public class Saver {
      */
     public static void setSaveInterval(int value) {
         saveinterval = (Math.max(60, value));
-    //	saveinterval = 15;
     }
 
     private static boolean checkSaveTime() {
-    //	String tmp = "Current: " + currenttime + " New: " + newsavetime;
-    //	System.out.println (tmp);
         return currenttime >= newsavetime;
     }
 
     private static void setNewSaveTime() {
-        newsavetime = ((currenttime / 1000) + saveinterval) * 1000;
+        System.out.println(newsavetime);
+        newsavetime = (currenttime + (saveinterval * 1000));
+        System.out.println(newsavetime);
     }
 
     private static void updateCurrentTime() {
@@ -62,9 +55,8 @@ public class Saver {
     }
 
     private static void AutoSave(Game game) {
-    	
+
         if (checkSaveTime()) {
-            Console.println("Attempting to autosave...", Console.Type.s);
             Save(game);
             oldsavetime = newsavetime;
             setNewSaveTime();
@@ -89,15 +81,15 @@ public class Saver {
             //     Console.println("Saving Game...");
 
             Json save = new Json();
-            
+
             String text = save.toJson(game);
 
             FileHandle file = Gdx.files.local(savefilename);
-            
+
             file.writeString(text, false);
 
             System.out.println("Game Saved!");
-            
+
             //      Console.println("Game Saved!");
         } else {
             System.out.println("Cannot access local storage!");

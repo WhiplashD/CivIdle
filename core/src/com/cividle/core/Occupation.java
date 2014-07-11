@@ -42,10 +42,18 @@ public class Occupation implements Serializable, Invokable {
         return name;
     }
 
+    /**
+     *
+     * @return user friendly representation of amount.
+     */
     public String displayAmount() {
         return Shorthand.parse(amount) + " ";
     }
 
+    /**
+     *
+     * @return user friendly representation of max amount.
+     */
     public String displayMaxAmount() {
         return "Max: " + Shorthand.parse(maxamount);
     }

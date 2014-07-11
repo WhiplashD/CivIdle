@@ -6,10 +6,8 @@ package com.cividle.core;
  */
 public interface Invokable {
 
-    /**
-     * Used to split up commands.
-     */
-    String delimiter = "\\.";
+//  Used to split up commands.
+    final String delimiter = "\\.";
 
     /**
      * Parses a string, executes a method matching the string.
