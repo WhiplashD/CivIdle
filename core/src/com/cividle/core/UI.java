@@ -65,13 +65,22 @@ public class UI {
 // Create a table that fills the screen. Everything else will go inside this table.
         Table backgroundTable = new Table();
         backgroundTable.setFillParent(true);
-        backgroundTable.setBackground(skin.newDrawable("white", Color.RED));
+        backgroundTable.setBackground(skin.newDrawable("white", Color.BLACK));
         stage.addActor(backgroundTable);
 
 // Create a button with the "default" TextButtonStyle. A 3rd parameter can be used to specify a name other than "default".
         button = new TextButton("Click me!", skin);
 
-        backgroundTable.add(button);
+//        backgroundTable.add(button);
+        Table t = new Table();
+        Table x = new Table();
+        x.setBackground(skin.newDrawable("white", Color.GREEN));
+        t.setBackground(skin.newDrawable("white", Color.BLUE));
+        backgroundTable.add(t).height(stage.getHeight()).width(100).left();
+        t.add(button);
+//        backgroundTable.row();
+        backgroundTable.add(x).expandX().width(300).height(59);
+        backgroundTable.row();
 
 // Add a listener to the button. ChangeListener is fired when the button's checked state changes, eg when clicked,
 // Button#setChecked() is called, via a key press, etc. If the event.cancel() is called, the checked state will be reverted.
@@ -89,7 +98,7 @@ public class UI {
 
 // Add an image actor. Have to set the size, else it would be the size of the drawable (which is the 1x1 texture).
         backgroundTable.add(new Image(skin.newDrawable("white", Color.RED))).size(64);
-
+        backgroundTable.debug();
     }
 
     public void render() {
@@ -97,8 +106,9 @@ public class UI {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
+
         Table.drawDebug(stage);
-        button.setText(game.rm.food.displayAmount());
+        button.setText(Float.toString(Gdx.graphics.getWidth()));
     }
 
     public void resize(int width, int height) {
