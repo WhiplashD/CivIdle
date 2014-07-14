@@ -72,7 +72,7 @@ public class RandomEventHandler implements Updateable {
     }
 
     @Override
-    public void Update(Game game, Double Delta) {
+    public void Update(Game game, Double delta) {
         UpdateTime();
         if (!hasevent) {
             if (CheckThrowTime() || CheckChance()) {

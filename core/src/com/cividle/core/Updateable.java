@@ -10,7 +10,8 @@ public interface Updateable {
      * Update method.
      *
      * @param game
+     * @param delta
      */
-    public void Update(Game game, Double Delta);
+    public void Update(Game game, Double delta);
 
 }

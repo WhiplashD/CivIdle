@@ -16,10 +16,8 @@ public class CivIdle extends ApplicationAdapter {
     private boolean isrunning = true, devmode = false;
     public static Game game;
     private static UI ui;
-//    private DesktopUI dui;
+    private DesktopUI dui;
     private long lastloop = TimeUtils.nanoTime();
-    private final int targetfps = 60;
-    private final long targettime = 1000000000 / targetfps;
     private double delta = 0;
     public static PlatformDependencyResolver pdr = null;
 
@@ -34,8 +32,8 @@ public class CivIdle extends ApplicationAdapter {
         Saver.Initialize();
 
 // Uncomment these lines to work with the old UI
-//        dui = new DesktopUI(game, devmode);
-//        dui.setVisible(true);
+        dui = new DesktopUI(game, devmode);
+        dui.setVisible(true);
     }
 
     @Override
@@ -47,15 +45,14 @@ public class CivIdle extends ApplicationAdapter {
 
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        if (delta >= 1) { // Updates that are done periodically, every second.
+        if (delta >= 1) { // Updates that are done periodically.
             game.Update(delta);
             Saver.Update(game);
             delta = 0;
         }
 
 // Uncomment this line to work with old UI
-//        dui.UpdateDisplay();
+        dui.UpdateDisplay();
         ui.render();
     }
 

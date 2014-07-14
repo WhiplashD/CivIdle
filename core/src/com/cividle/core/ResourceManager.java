@@ -81,63 +81,63 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
         randCollectSpecialResource(pm, bm, stone);
     }
 
-    private void GatherFood(PopulationManager pm, Double dt) { // Farm Farmer
-        food.addAmount(((pm.farmer.getAmount()) * food.getGatherMultiplier()));
+    private void GatherFood(PopulationManager pm, Double delta) { // Farm Farmer
+        food.addAmount(((pm.farmer.getAmount()) * food.getGatherMultiplier()) * delta);
     }
 
     public String DispFPS(PopulationManager pm) {
         return " (" + CivIdle.pdr.FormatDecimalFormat((pm.farmer.getAmount() * food.getGatherMultiplier() - pm.getPopulationAmount())) + "/s)";
     }
 
-    private void GatherWood(PopulationManager pm, Double dt) { // Forester
-        wood.addAmount(((pm.forester.getAmount()) * wood.getGatherMultiplier()));
+    private void GatherWood(PopulationManager pm, Double delta) { // Forester
+        wood.addAmount(((pm.forester.getAmount()) * wood.getGatherMultiplier()) * delta);
     }
 
     public String DispWPS(PopulationManager pm) {
         return " (" + CivIdle.pdr.FormatDecimalFormat(pm.forester.getAmount() * wood.getGatherMultiplier()) + "/s)";
     }
 
-    private void GatherStone(PopulationManager pm, Double dt) { // Miner
-        stone.addAmount(((pm.miner.getAmount()) * stone.getGatherMultiplier()));
+    private void GatherStone(PopulationManager pm, Double delta) { // Miner
+        stone.addAmount(((pm.miner.getAmount()) * stone.getGatherMultiplier()) * delta);
     }
 
     public String DispSPS(PopulationManager pm) {
         return " (" + CivIdle.pdr.FormatDecimalFormat(pm.miner.getAmount() * stone.getGatherMultiplier()) + "/s)";
     }
 
-    private void GatherHerbs(PopulationManager pm, BuildingManager bm, Double dt) { // Greenhouse Gardener
-        herbs.addAmount(pm.gardner.getAmount() * herbs.getGatherMultiplier());
+    private void GatherHerbs(PopulationManager pm, BuildingManager bm, Double delta) { // Greenhouse Gardener
+        herbs.addAmount(pm.gardner.getAmount() * herbs.getGatherMultiplier() * delta);
         UpdateSharedResourceLimit(bm.storagestockpile);
     }
 
-    private void GatherSkins(PopulationManager pm, BuildingManager bm, Double dt) { // Hunting Lodge Hunter
-        skins.addAmount((pm.hunter.getAmount() * skins.getGatherMultiplier()));
+    private void GatherSkins(PopulationManager pm, BuildingManager bm, Double delta) { // Hunting Lodge Hunter
+        skins.addAmount((pm.hunter.getAmount() * skins.getGatherMultiplier()) * delta);
         UpdateSharedResourceLimit(bm.storagestockpile);
     }
 
-    private void ConvertSkinsToLeather(PopulationManager pm, BuildingManager bm, Double dt) { // Tannery Tanner
+    private void ConvertSkinsToLeather(PopulationManager pm, BuildingManager bm, Double delta) { // Tannery Tanner
         if (skins.getAmount() > 0 && !leather.limitReached()) {
-            skins.subtractAmount(pm.tanner.getAmount());
-            leather.addAmount(pm.tanner.getAmount());
+            skins.subtractAmount(pm.tanner.getAmount() * delta);
+            leather.addAmount(pm.tanner.getAmount() * delta);
         }
     }
 
-    private void ConertOreToMetal(PopulationManager pm, BuildingManager bm, Double dt) { // Smithey Blacksmith
+    private void ConertOreToMetal(PopulationManager pm, BuildingManager bm, Double delta) { // Smithey Blacksmith
         if (ore.getAmount() > 0 && !metal.limitReached()) {
-            ore.subtractAmount(pm.blacksmith.getAmount());
-            metal.addAmount(pm.blacksmith.getAmount());
+            ore.subtractAmount(pm.blacksmith.getAmount() * delta);
+            metal.addAmount(pm.blacksmith.getAmount() * delta);
         }
     }
 
-    private void GenerateResearch(BuildingManager bm, PopulationManager pm, Double dt) { // School
-        research.addAmount(bm.school.getAmount() * (pm.getPopulationAmount() * 0.075) * research.getGatherMultiplier());
+    private void GenerateResearch(BuildingManager bm, PopulationManager pm, Double delta) { // School
+        research.addAmount((bm.school.getAmount() * (pm.getPopulationAmount() * 0.075) * research.getGatherMultiplier()) * delta);
     }
 
-    private void GeneratePiety(PopulationManager pm, Double dt) { // Church Cleric
-        piety.addAmount(pm.cleric.getAmount() * piety.getGatherMultiplier());
+    private void GeneratePiety(PopulationManager pm, Double delta) { // Church Cleric
+        piety.addAmount((pm.cleric.getAmount() * piety.getGatherMultiplier()) * delta);
     }
 
-    private void GenerateSickness(PopulationManager pm, Double dt) { // Unburied dead generate sickness.
+    private void GenerateSickness(PopulationManager pm, Double delta) { // Unburied dead generate sickness.
         sickness.addAmount(pm.unburieddead.getAmount() * sickness.getGatherMultiplier());
     }
 
@@ -280,17 +280,17 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
     }
 
     @Override
-    public void Update(Game game, Double dt) {
-        GatherFood(game.pm, dt);
-        GatherWood(game.pm, dt);
-        GatherStone(game.pm, dt);
-        GatherHerbs(game.pm, game.bm, dt);
-        GatherSkins(game.pm, game.bm, dt);
-        ConvertSkinsToLeather(game.pm, game.bm, dt);
-        ConertOreToMetal(game.pm, game.bm, dt);
-        GenerateResearch(game.bm, game.pm, dt);
-        GeneratePiety(game.pm, dt);
-        GenerateSickness(game.pm, dt);
+    public void Update(Game game, Double delta) {
+        GatherFood(game.pm, delta);
+        GatherWood(game.pm, delta);
+        GatherStone(game.pm, delta);
+        GatherHerbs(game.pm, game.bm, delta);
+        GatherSkins(game.pm, game.bm, delta);
+        ConvertSkinsToLeather(game.pm, game.bm, delta);
+        ConertOreToMetal(game.pm, game.bm, delta);
+        GenerateResearch(game.bm, game.pm, delta);
+        GeneratePiety(game.pm, delta);
+        GenerateSickness(game.pm, delta);
     }
 
     @Override

@@ -143,7 +143,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         }
     }
 
-    private void BuryDead(Double dt) {
+    private void BuryDead(Double delta) {
         // We check if there are any unburied dead and there are clerics to bury the dead.
         if (unburieddead.getAmount() > 0 && cleric.getAmount() > 0) {
             // Then we check if we have space for the dead.
@@ -154,28 +154,28 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         }
     }
 
-    private void CheckSickness(ResourceManager rm, Double dt) {
+    private void CheckSickness(ResourceManager rm, Double delta) {
         if (rm.sickness.limitReached() | sick.getAmount() > 0) {
-            SpreadSickness();
-            CureSickness(rm);
+            SpreadSickness(delta);
+            CureSickness(rm, delta);
         }
     }
 
-    private void CureSickness(ResourceManager rm) { // Apothecaries reduce sickness as long as there are herbs.
+    private void CureSickness(ResourceManager rm, Double delta) { // Apothecaries reduce sickness as long as there are herbs.
         if (rm.sickness.getAmount() - apothecary.getAmount() >= 0) { // Reduces sickness aura thingymajigger.
-            rm.sickness.subtractAmount(apothecary.getAmount());
+            rm.sickness.subtractAmount(apothecary.getAmount() * delta);
         } else if (sick.getAmount() - apothecary.getAmount() >= 0) { // Cures sick people.
-            sick.subtractAmount(apothecary.getAmount());
+            sick.subtractAmount((long) (apothecary.getAmount() * delta));
         }
     }
 
-    private void SpreadSickness() {
+    private void SpreadSickness(Double delta) {
         if (unburieddead.getAmount() > 0 && sick.getAmount() < popamount) {
-            sick.addAmount(1);
+            sick.addAmount((long) (1 * delta));
         } else if (sick.getAmount() >= popamount && popamount - (sick.getAmount() * 0.25) >= 0) {
             // Casting to longs to remove decimals.
-            KillPopulation((long) (sick.getAmount() * 0.25));
-            sick.subtractAmount((long) (sick.getAmount() * 0.25));
+            KillPopulation((long) ((sick.getAmount() * 0.25) * delta));
+            sick.subtractAmount((long) ((sick.getAmount() * 0.25) * delta));
         }
     }
 
@@ -248,10 +248,10 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     }
 
 // Hunger upkeep and starvation checking.
-    private void PopulationHungerUpkeep(ResourceManager rm, Double dt) {
+    private void PopulationHungerUpkeep(ResourceManager rm, Double delta) {
         if (rm.food.getAmount() > 0 && popamount > 0) {
             for (int i = 0; i < popamount; i++) {
-                rm.food.subtractAmount(1);
+                rm.food.subtractAmount(1 * delta);
                 starving = false;
             }
         } else if (rm.food.getAmount() <= 0 && popamount > 0) {
@@ -308,7 +308,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     }
 
     // If there is no more stored food, the percentage of starving people go up each second, adding to the number of deaths.
-    private void StarvationMultiplierUpdater(Double dt) {
+    private void StarvationMultiplierUpdater(Double delta) {
         if (starving) {
             starvationpercentage++;
             Console.println("Starvation in effect " + starvationpercentage, Console.Type.s);
@@ -316,7 +316,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
             starvationpercentage = 1; // It resets once there is food and/or people stop starving to death.
         }
         // Formula is: Base 1 plus a base of 1% of the current population plus N% of the population where N increments each second.
-        starvationmultiplier = 1 + (popamount * (0.01f + (starvationpercentage * 0.01f)));
+        starvationmultiplier = (1 + (popamount * (0.01f + (starvationpercentage * 0.01f)))) * delta;
     }
 
     @Override
@@ -325,11 +325,11 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     }
 
     @Override
-    public void Update(Game game, Double dt) {
-        PopulationHungerUpkeep(game.rm, dt);
-        StarvationMultiplierUpdater(dt);
-        CheckSickness(game.rm, dt);
-        BuryDead(dt);
+    public void Update(Game game, Double delta) {
+        PopulationHungerUpkeep(game.rm, delta);
+        StarvationMultiplierUpdater(delta);
+        CheckSickness(game.rm, delta);
+        BuryDead(delta);
     }
 
     @Override
