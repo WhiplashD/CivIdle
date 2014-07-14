@@ -81,7 +81,7 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
         randCollectSpecialResource(pm, bm, stone);
     }
 
-    private void GatherFood(PopulationManager pm) { // Farm Farmer
+    private void GatherFood(PopulationManager pm, Double dt) { // Farm Farmer
         food.addAmount(((pm.farmer.getAmount()) * food.getGatherMultiplier()));
     }
 
@@ -89,7 +89,7 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
         return " (" + CivIdle.pdr.FormatDecimalFormat((pm.farmer.getAmount() * food.getGatherMultiplier() - pm.getPopulationAmount())) + "/s)";
     }
 
-    private void GatherWood(PopulationManager pm) { // Forester
+    private void GatherWood(PopulationManager pm, Double dt) { // Forester
         wood.addAmount(((pm.forester.getAmount()) * wood.getGatherMultiplier()));
     }
 
@@ -97,7 +97,7 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
         return " (" + CivIdle.pdr.FormatDecimalFormat(pm.forester.getAmount() * wood.getGatherMultiplier()) + "/s)";
     }
 
-    private void GatherStone(PopulationManager pm) { // Miner
+    private void GatherStone(PopulationManager pm, Double dt) { // Miner
         stone.addAmount(((pm.miner.getAmount()) * stone.getGatherMultiplier()));
     }
 
@@ -105,39 +105,39 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
         return " (" + CivIdle.pdr.FormatDecimalFormat(pm.miner.getAmount() * stone.getGatherMultiplier()) + "/s)";
     }
 
-    private void GatherHerbs(PopulationManager pm, BuildingManager bm) { // Greenhouse Gardener
+    private void GatherHerbs(PopulationManager pm, BuildingManager bm, Double dt) { // Greenhouse Gardener
         herbs.addAmount(pm.gardner.getAmount() * herbs.getGatherMultiplier());
         UpdateSharedResourceLimit(bm.storagestockpile);
     }
 
-    private void GatherSkins(PopulationManager pm, BuildingManager bm) { // Hunting Lodge Hunter
+    private void GatherSkins(PopulationManager pm, BuildingManager bm, Double dt) { // Hunting Lodge Hunter
         skins.addAmount((pm.hunter.getAmount() * skins.getGatherMultiplier()));
         UpdateSharedResourceLimit(bm.storagestockpile);
     }
 
-    private void ConvertSkinsToLeather(PopulationManager pm, BuildingManager bm) { // Tannery Tanner
+    private void ConvertSkinsToLeather(PopulationManager pm, BuildingManager bm, Double dt) { // Tannery Tanner
         if (skins.getAmount() > 0 && !leather.limitReached()) {
             skins.subtractAmount(pm.tanner.getAmount());
             leather.addAmount(pm.tanner.getAmount());
         }
     }
 
-    private void ConertOreToMetal(PopulationManager pm, BuildingManager bm) { // Smithey Blacksmith
+    private void ConertOreToMetal(PopulationManager pm, BuildingManager bm, Double dt) { // Smithey Blacksmith
         if (ore.getAmount() > 0 && !metal.limitReached()) {
             ore.subtractAmount(pm.blacksmith.getAmount());
             metal.addAmount(pm.blacksmith.getAmount());
         }
     }
 
-    private void GenerateResearch(BuildingManager bm, PopulationManager pm) { // School
+    private void GenerateResearch(BuildingManager bm, PopulationManager pm, Double dt) { // School
         research.addAmount(bm.school.getAmount() * (pm.getPopulationAmount() * 0.075) * research.getGatherMultiplier());
     }
 
-    private void GeneratePiety(PopulationManager pm) { // Church Cleric
+    private void GeneratePiety(PopulationManager pm, Double dt) { // Church Cleric
         piety.addAmount(pm.cleric.getAmount() * piety.getGatherMultiplier());
     }
 
-    private void GenerateSickness(PopulationManager pm) { // Unburied dead generate sickness.
+    private void GenerateSickness(PopulationManager pm, Double dt) { // Unburied dead generate sickness.
         sickness.addAmount(pm.unburieddead.getAmount() * sickness.getGatherMultiplier());
     }
 
@@ -280,17 +280,17 @@ public class ResourceManager extends Trades implements Updateable, Serializable,
     }
 
     @Override
-    public void Update(Game game) {
-        GatherFood(game.pm);
-        GatherWood(game.pm);
-        GatherStone(game.pm);
-        GatherHerbs(game.pm, game.bm);
-        GatherSkins(game.pm, game.bm);
-        ConvertSkinsToLeather(game.pm, game.bm);
-        ConertOreToMetal(game.pm, game.bm);
-        GenerateResearch(game.bm, game.pm);
-        GeneratePiety(game.pm);
-        GenerateSickness(game.pm);
+    public void Update(Game game, Double dt) {
+        GatherFood(game.pm, dt);
+        GatherWood(game.pm, dt);
+        GatherStone(game.pm, dt);
+        GatherHerbs(game.pm, game.bm, dt);
+        GatherSkins(game.pm, game.bm, dt);
+        ConvertSkinsToLeather(game.pm, game.bm, dt);
+        ConertOreToMetal(game.pm, game.bm, dt);
+        GenerateResearch(game.bm, game.pm, dt);
+        GeneratePiety(game.pm, dt);
+        GenerateSickness(game.pm, dt);
     }
 
     @Override

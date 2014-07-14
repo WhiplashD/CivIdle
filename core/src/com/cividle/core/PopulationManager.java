@@ -143,7 +143,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         }
     }
 
-    private void BuryDead() {
+    private void BuryDead(Double dt) {
         // We check if there are any unburied dead and there are clerics to bury the dead.
         if (unburieddead.getAmount() > 0 && cleric.getAmount() > 0) {
             // Then we check if we have space for the dead.
@@ -154,7 +154,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
         }
     }
 
-    private void CheckSickness(ResourceManager rm) {
+    private void CheckSickness(ResourceManager rm, Double dt) {
         if (rm.sickness.limitReached() | sick.getAmount() > 0) {
             SpreadSickness();
             CureSickness(rm);
@@ -248,7 +248,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     }
 
 // Hunger upkeep and starvation checking.
-    private void PopulationHungerUpkeep(ResourceManager rm) {
+    private void PopulationHungerUpkeep(ResourceManager rm, Double dt) {
         if (rm.food.getAmount() > 0 && popamount > 0) {
             for (int i = 0; i < popamount; i++) {
                 rm.food.subtractAmount(1);
@@ -308,7 +308,7 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     }
 
     // If there is no more stored food, the percentage of starving people go up each second, adding to the number of deaths.
-    private void StarvationMultiplierUpdater() {
+    private void StarvationMultiplierUpdater(Double dt) {
         if (starving) {
             starvationpercentage++;
             Console.println("Starvation in effect " + starvationpercentage, Console.Type.s);
@@ -325,11 +325,11 @@ public class PopulationManager implements Updateable, Serializable, Invokable, E
     }
 
     @Override
-    public void Update(Game game) {
-        PopulationHungerUpkeep(game.rm);
-        StarvationMultiplierUpdater();
-        CheckSickness(game.rm);
-        BuryDead();
+    public void Update(Game game, Double dt) {
+        PopulationHungerUpkeep(game.rm, dt);
+        StarvationMultiplierUpdater(dt);
+        CheckSickness(game.rm, dt);
+        BuryDead(dt);
     }
 
     @Override

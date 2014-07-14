@@ -11,6 +11,6 @@ public interface Updateable {
      *
      * @param game
      */
-    public void Update(Game game);
+    public void Update(Game game, Double Delta);
 
 }

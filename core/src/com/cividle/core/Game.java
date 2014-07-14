@@ -20,9 +20,9 @@ public class Game implements Serializable {
         reh = new RandomEventHandler();
     }
     
-    public void Update() {
-        rm.Update(this);
-        pm.Update(this);
-        reh.Update(this);
+    public void Update(Double Delta) {
+        rm.Update(this, Delta);
+        pm.Update(this, Delta);
+        reh.Update(this, Delta);
     }
 }

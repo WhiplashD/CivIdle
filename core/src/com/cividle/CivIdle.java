@@ -49,7 +49,7 @@ public class CivIdle extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (delta >= 1) { // Updates that are done periodically, every second.
-            game.Update();
+            game.Update(delta);
             Saver.Update(game);
             delta = 0;
         }
