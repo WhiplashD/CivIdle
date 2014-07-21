@@ -32,8 +32,8 @@ public class CivIdle extends ApplicationAdapter {
         Saver.Initialize();
 
 // Uncomment these lines to work with the old UI
-        dui = new DesktopUI(game, devmode);
-        dui.setVisible(true);
+   //     dui = new DesktopUI(game, devmode);
+    //    dui.setVisible(true);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CivIdle extends ApplicationAdapter {
         }
 
 // Uncomment this line to work with old UI
-        dui.UpdateDisplay();
+   //     dui.UpdateDisplay();
         ui.render();
     }
 
